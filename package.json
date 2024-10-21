@@ -1,6 +1,6 @@
 {
   "name": "react-icon-cloud-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "An interactive 3D tag cloud component for React (Javascript) that renders text, images, and simple icons into a interactive 3D tag cloud",
   "main": "dist/react-icon-cloud-js.umd.js",
