@@ -1,0 +1,78 @@
+{
+  "name": "react-icon-cloud-js",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "An interactive 3D tag cloud component for React (Javascript) that renders text, images, and simple icons into a interactive 3D tag cloud",
+  "main": "dist/react-icon-cloud-js.umd.js",
+  "module": "dist/react-icon-cloud-js.es.js",
+  "types": "module",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@csstools/convert-colors": "^2.0.0",
+    "next-themes": "^0.3.0",
+    "prop-types": "^15.8.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.27.0",
+    "tailwind-merge": "^2.5.3",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.11.1",
+    "@types/react": "^18.3.10",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.2",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^9.11.1",
+    "eslint-plugin-react": "^7.37.0",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.12",
+    "globals": "^15.9.0",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.14",
+    "vite": "^5.4.8"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "keywords": [
+    "react",
+    "icon cloud",
+    "javascript",
+    "npm",
+    "component",
+    "react-component",
+    "react",
+    "tag-canvas",
+    "word-cloud",
+    "tag-cloud",
+    "wordcloud",
+    "tagcloud",
+    "canvas",
+    "react-tag-canvas",
+    "img-cloud",
+    "canvas",
+    "react-icon-cloud-js"
+  ],
+  "author": {
+    "name": "Adjy Sédar DÉSIR"
+  },
+  "contributors": [
+    {
+      "name": "Teague Stockwell",
+      "email": "tsappdevelopment@gmail.com",
+      "url": "https://teaguestockwell.com"
+    }
+  ],
+  "license": "MIT"
+}

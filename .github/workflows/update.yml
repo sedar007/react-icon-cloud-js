@@ -1,0 +1,144 @@
+name: Update and Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_message:
+        description: 'Type de version (par exemple, major, minor, patch)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - 'major'
+          - 'minor'
+          - 'patch'
+permissions:
+  contents: write  # Nécessaire pour créer des releases
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: Workflow
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: refs/heads/main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          registry-url: https://registry.npmjs.org/
+
+      - name: Change Version
+        id: change_version
+        run: |
+          # Lire la version actuelle depuis package.json
+          current_version=$(jq -r '.version' package.json)
+
+          # Diviser la version en ses composants MAJOR.MINOR.PATCH
+          IFS='.' read -r -a version_parts <<< "$current_version"
+
+          # Initialiser les composants
+          major="${version_parts[0]}"
+          minor="${version_parts[1]}"
+          patch="${version_parts[2]}"
+
+          # Déterminer quel composant incrémenter en fonction de l'argument
+          case "${{ github.event.inputs.commit_message }}" in
+            major)
+              major=$((major + 1))
+              minor=0
+              patch=0
+              ;;
+            minor)
+              minor=$((minor + 1))
+              patch=0
+              ;;
+            patch)
+              patch=$((patch + 1))
+              ;;
+            *)
+              echo "Usage: {major|minor|patch}"
+              exit 1
+              ;;
+          esac
+
+          # Composer la nouvelle version
+          new_version="$major.$minor.$patch"
+
+          # Mettre à jour la version dans package.json
+          jq --arg new_version "$new_version" '.version = $new_version' package.json > tmp.json && mv tmp.json package.json
+          echo "new_version=$new_version" >> $GITHUB_ENV
+
+
+      - name: Get Version from package.json
+        id: get_version
+        run: |
+          new_version=$(jq -r '.version' package.json)
+          echo "new_version=$new_version" >> $GITHUB_ENV
+
+      - name: Determine Commit Message
+        id: commit_message
+        run: |
+          if [ -z "${{ github.event.inputs.commit_message }}" ]; then
+            echo "COMMIT_MESSAGE=Bump version to ${{ env.new_version }} - Automated release" >> $GITHUB_ENV
+          else
+            echo "COMMIT_MESSAGE=${{ github.event.inputs.commit_message }}" >> $GITHUB_ENV
+          fi
+
+      - name: Configure Git
+        run: |
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "actions@github.com"
+
+      - name: Commit New Version
+        run: |
+          git add package.json
+          git commit -m "${{ env.COMMIT_MESSAGE }} - Version ${{ env.new_version }}"
+
+      - name: Push changes
+        run: |
+          git push origin main
+        env:
+          GIT_TOKEN: ${{ secrets.TOKEN_WORKFLOWS }}
+
+      - name: Create Git Tag
+        run: |
+          git tag -a "v${{ env.new_version }}" -m "${{ env.new_version }}"
+          git push origin "v${{ env.new_version }}"
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.TOKEN_WORKFLOWS }}
+          tag_name: "v${{ env.new_version }}"
+          name: "v${{ env.new_version }}"
+          draft: false
+          prerelease: false
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run 
+        run: npm run build
+
+      - name: Create Archive of Build
+        run: |
+          zip -r "dist-${{ env.new_version }}.zip" dist
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.TOKEN_WORKFLOWS }}
+          tag_name: "v${{ env.new_version }}"
+          files: "dist-${{ env.new_version }}.zip"
+      
+      - name: publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish
