@@ -10,11 +10,10 @@ const tr = (fn) => {
   try {
     fn();
   } catch (e) {
-      e
     try {
       fn();
     } catch (e) {
-          e
+      console.error(e);
     }
   }
 };
@@ -37,7 +36,9 @@ const CloudWrapped = ({
     setMounted(true);
     return () =>
       tr(() => {
-        eval(`TagCanvas.Delete('${state.canvasId}')`);
+        if (window.TagCanvas) {
+          window.TagCanvas.Delete(state.canvasId);
+        }
       });
   }, []);
 
@@ -57,15 +58,17 @@ const CloudWrapped = ({
     tr(() => {
       if (isVisible && mounted) {
         if (!isScriptLoaded) {
-          eval(tagCanvasString);
+          const script = document.createElement('script');
+          script.innerHTML = tagCanvasString;
+          document.body.appendChild(script);
           isScriptLoaded = true;
         }
 
         if (state.hasStarted) {
-          eval(`TagCanvas.Resume('${state.canvasId}')`);
+          window.TagCanvas.Resume(state.canvasId);
         } else {
           try {
-            eval(`TagCanvas.Start('${state.canvasId}', null, ${ops})`);
+            window.TagCanvas.Start(state.canvasId, null, JSON.parse(ops));
             state.hasStarted = true;
           } catch (e) {
             const el = document.getElementById(state.canvasContainerId);
@@ -79,7 +82,7 @@ const CloudWrapped = ({
         }
       } else {
         if (state.hasStarted) {
-          eval(`TagCanvas.Pause('${state.canvasId}')`);
+          window.TagCanvas.Pause(state.canvasId);
         }
       }
     });
