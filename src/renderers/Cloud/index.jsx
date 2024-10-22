@@ -47,7 +47,7 @@ const CloudWrapped = ({
       ? 'ontouchstart' in window || navigator.maxTouchPoints
       : false;
   const ops = JSON.stringify({
-    dragControl: supportsTouch ? true : false,
+    dragControl: !!supportsTouch,
     maxSpeed: supportsTouch ? 0.01 : 0.05,
     textFont: null,
     textColour: null,
