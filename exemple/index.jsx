@@ -1,16 +1,14 @@
 "use client";
 import { createRoot } from 'react-dom/client';
 import PropTypes from "prop-types";
-
+import './index.css';
 import { useEffect, useMemo, useState } from "react";
 import { useTheme } from "next-themes";
-import {
-    Cloud,
-    fetchSimpleIcons,
-    renderSimpleIcon,
-} from "react-icon-cloud-js";
+import { Cloud } from "../src/renderers/Cloud";
+import { fetchSimpleIcons } from "../src/utils/fetchSimpleIcons";
+import { renderSimpleIcon } from "../src/renderers/SimpleIcon";
 
-export const cloudProps = {
+const cloudProps = {
     containerProps: {
         style: {
             display: "flex",
@@ -36,39 +34,45 @@ export const cloudProps = {
     },
 };
 
+export default cloudProps;
+
 export const renderCustomIcon = (icon, theme) => {
     const bgHex = theme === "light" ? "#f3f2ef" : "#080510";
     const fallbackHex = theme === "light" ? "#6e6e73" : "#ffffff";
     const minContrastRatio = theme === "dark" ? 2 : 1.2;
 
-    return renderSimpleIcon({
-        icon,
-        bgHex,
-        fallbackHex,
-        minContrastRatio,
-        size: 42,
-    });
+    return (
+        <div key={icon.slug}>
+            {renderSimpleIcon({
+                icon,
+                bgHex,
+                fallbackHex,
+                minContrastRatio,
+                size: 42,
+            })}
+        </div>
+    );
 };
 
 export function IconCloud({ iconSlugs }) {
     const [data, setData] = useState(null);
-    const {theme} = useTheme();
+    const { theme } = useTheme();
 
     useEffect(() => {
-        fetchSimpleIcons({slugs: iconSlugs}).then(setData);
+        fetchSimpleIcons({ slugs: iconSlugs }).then(setData);
     }, [iconSlugs]);
 
     const renderedIcons = useMemo(() => {
         if (!data) return null;
-        return Object.values(data.simpleIcons).map((icon) =>
-            renderCustomIcon(icon, theme || "light"),
-        );
+        return Object.values(data.simpleIcons).map((icon) => {
+            return renderCustomIcon(icon, theme || "light"); // Ne pas passer de clé ici
+        });
     }, [data, theme]);
 
     return (
-            <Cloud {...cloudProps}>
-                <>{renderedIcons}</>
-            </Cloud>
+        <Cloud {...cloudProps}>
+            <>{renderedIcons}</>
+        </Cloud>
     );
 }
 
@@ -78,7 +82,6 @@ IconCloud.propTypes = {
 };
 
 const App = () => {
-
     const slugs = [
         "typescript",
         "javascript",
@@ -107,12 +110,10 @@ const App = () => {
         "figma",
     ];
 
-    return(
-        <>
-            <IconCloud iconSlugs={slugs}/>
-        </>
+    return (
+            <IconCloud iconSlugs={slugs} />
     );
-}
+};
 
 const root = createRoot(document.getElementById("root"));
 root.render(<App />);
