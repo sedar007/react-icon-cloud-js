@@ -57,7 +57,7 @@ const CloudWrapped = ({
   const onVisibilityChange = (isVisible) =>
     tr(() => {
       if (isVisible && mounted) {
-        if (!isScriptLoaded) {
+                                                                                                              if (!isScriptLoaded) {
           const script = document.createElement('script');
           script.innerHTML = tagCanvasString;
           document.body.appendChild(script);
