@@ -199,4 +199,4 @@ See `LICENSE` for more information.
 
 ## Contact
 
-A. Sédar - [LinkedIn](https://www.linkedin.com/in/adjy-sedar-desir/)
+A. Sédar - [Email](mailto:dev@adjysedar.fr)
