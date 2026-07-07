@@ -38,8 +38,8 @@
     "@testing-library/react": "^16.0.0",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
-    "@vitejs/plugin-react": "^4.2.1",
-    "@vitest/coverage-v8": "^1.6.0",
+    "@vitejs/plugin-react": "^6.0.3",
+    "@vitest/coverage-v8": "^4.1.10",
     "autoprefixer": "^10.4.19",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
@@ -47,8 +47,8 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "jsdom": "^24.1.0",
     "postcss": "^8.4.38",
-    "vite": "^5.2.0",
-    "vitest": "^1.6.0"
+    "vite": "^8.1.3",
+    "vitest": "^4.1.10"
   },
   "license": "MIT"
 }
