@@ -15,6 +15,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
   release:
@@ -135,8 +136,8 @@ jobs:
           tag_name: "v${{ env.new_version }}"
           files: "dist-${{ env.new_version }}.zip"
 
+      - name: Update npm
+        run: npm install -g npm@latest
 
       - name: Publish to npm
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish
+        run: npm publish --access public
