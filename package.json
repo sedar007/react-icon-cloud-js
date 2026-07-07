@@ -74,5 +74,9 @@
       "url": "https://teaguestockwell.com"
     }
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sedar007/react-icon-cloud-js.git"
+  }
 }
